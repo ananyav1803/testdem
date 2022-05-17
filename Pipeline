@@ -1,0 +1,19 @@
+node{
+stage('SCM'){
+checkout scm
+}
+stage(build'){
+}
+stage('aws connect'){
+sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 905781841335.dkr.ecr.us-east-1.amazonaws.com'
+}
+stage('Build Docker Image'){
+sh 'docker build -t testecr .'
+}
+stage('Tag Docker Image'){
+sh 'docker tag testecr:latest 905781841335.dkr.ecr.us-east-1.amazonaws.com/testecr:latest'
+}
+stage('Push Docker Image'){
+sh 'docker push 905781841335.dkr.ecr.us-east-1.amazonaws.com/testecr:latest'
+}
+}
